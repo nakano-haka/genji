@@ -11,7 +11,14 @@ const isPublicRoute = createRouteMatcher([
   '/api/cron/wait',
 ])
 
-export default clerkMiddleware();
+const isProtectedRoute = createRouteMatcher([
+  '/dashboard(.*)',
+  '/settings(.*)',
+]);
+
+export default clerkMiddleware((auth, req) => {
+  if (isProtectedRoute(req)) auth().protect();
+});
 
 export const config = {
   matcher: ['/((?!.*\\..*|_next).*)', '/', '/(api|trpc)(.*)'],
